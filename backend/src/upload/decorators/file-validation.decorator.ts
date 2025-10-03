@@ -1,4 +1,4 @@
-import { applyDecorators, UseInterceptors } from '@nestjs/common';
+import { applyDecorators, BadRequestException, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 
@@ -33,7 +33,7 @@ function fileFilter(): MulterOptions {
 
       if (!allowedMimes.includes(file.mimetype)) {
         return callback(
-          new Error('Tipo de arquivo não permitido'),
+          new BadRequestException('Tipo de arquivo não permitido'),
           false
         );
       }
