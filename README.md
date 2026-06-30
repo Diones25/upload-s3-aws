@@ -4,13 +4,13 @@
 
 # upload-s3-aws
 
-Aplicação **full-stack** para upload, gerenciamento e visualização de arquivos no **Amazon S3**. Composta por uma API REST em **NestJS** e uma interface web em **Next.js 14** com suporte a *drag-and-drop*, URLs assinadas e validação de arquivos.
+**Full-stack** application for uploading, managing, and viewing files on **Amazon S3**. Composed of a **NestJS** REST API and a **Next.js 14** web interface with drag-and-drop support, signed URLs, and file validation.
 
 ---
 
-## Tecnologias
+## Technologies
 
-| Camada | Tecnologia | Versão |
+| Layer | Technology | Version |
 |--------|-----------|--------|
 | Backend | [NestJS](https://nestjs.com) | ^11.0 |
 | Backend | [AWS SDK v3](https://aws.amazon.com/sdk-for-javascript/) (client-s3) | ^3.901 |
@@ -25,22 +25,22 @@ Aplicação **full-stack** para upload, gerenciamento e visualização de arquiv
 
 ---
 
-## Arquitetura
+## Architecture
 
-O projeto segue o padrão **monorepo** com dois pacotes independentes:
+The project follows a **monorepo** pattern with two independent packages:
 
-- **Backend** — Arquitetura **modular** (NestJS): módulos agrupam *controllers* (HTTP), *services* (regras de negócio / S3) e *decorators* (validação). Uso de injeção de dependência e programação declarativa com decorators.
-- **Frontend** — **Single-page application** com Next.js App Router: páginas consomem a API via *client components* isolados em `components/` e um cliente HTTP centralizado em `lib/`.
+- **Backend** — **Modular** architecture (NestJS): modules group *controllers* (HTTP), *services* (business rules / S3), and *decorators* (validation). Uses dependency injection and declarative programming with decorators.
+- **Frontend** — **Single-page application** with Next.js App Router: pages consume the API via isolated *client components* in `components/` and a centralized HTTP client in `lib/`.
 
 ```
-Cliente Web (Next.js 14)
+Web Client (Next.js 14)
        │
        │  HTTP (axios)
        ▼
-Proxy Next.js (/api/* → localhost:5000)
+Next.js Proxy (/api/* → localhost:5000)
        │
        ▼
- API REST (NestJS)
+ REST API (NestJS)
        │
        ▼
  Amazon S3 (AWS SDK v3)
@@ -48,32 +48,32 @@ Proxy Next.js (/api/* → localhost:5000)
 
 ---
 
-## Como Executar
+## How to Run
 
-### Pré-requisitos
+### Prerequisites
 
 - Node.js 18+
 - npm
-- Conta AWS com bucket S3 criado e credenciais IAM (`s3:PutObject`, `s3:GetObject`, `s3:DeleteObject`, `s3:ListBucket`)
+- AWS account with S3 bucket created and IAM credentials (`s3:PutObject`, `s3:GetObject`, `s3:DeleteObject`, `s3:ListBucket`)
 
 ### 1. Backend
 
 ```bash
 cd backend
-cp .env.example .env     # edite com suas credenciais AWS
+cp .env.example .env     # edit with your AWS credentials
 npm install
 npm run dev              # http://localhost:5000
 ```
 
-**Variáveis de ambiente (`.env`):**
+**Environment variables (`.env`):**
 
-| Variável | Descrição | Obrigatório |
+| Variable | Description | Required |
 |----------|-----------|-------------|
-| `PORT` | Porta do servidor (padrão: 5000) | Não |
-| `AWS_ACCESS_KEY_ID` | Access key da AWS | Sim |
-| `AWS_SECRET_ACCESS_KEY` | Secret key da AWS | Sim |
-| `AWS_REGION` | Região do bucket (ex: `us-east-1`) | Sim |
-| `AWS_S3_BUCKET_NAME` | Nome do bucket S3 | Sim |
+| `PORT` | Server port (default: 5000) | No |
+| `AWS_ACCESS_KEY_ID` | AWS access key | Yes |
+| `AWS_SECRET_ACCESS_KEY` | AWS secret key | Yes |
+| `AWS_REGION` | Bucket region (e.g. `us-east-1`) | Yes |
+| `AWS_S3_BUCKET_NAME` | S3 bucket name | Yes |
 
 ### 2. Frontend
 
@@ -83,35 +83,35 @@ npm install
 npm run dev              # http://localhost:3001
 ```
 
-**Variável de ambiente (`.env.local`):**
+**Environment variable (`.env.local`):**
 
-| Variável | Descrição | Padrão |
+| Variable | Description | Default |
 |----------|-----------|--------|
-| `NEXT_PUBLIC_API_URL` | URL base da API | `http://localhost:5000` |
+| `NEXT_PUBLIC_API_URL` | API base URL | `http://localhost:5000` |
 
-> O Next.js faz proxy de requisições `/api/*` para `http://localhost:5000/*` (configurado em `next.config.js`).
+> Next.js proxies `/api/*` requests to `http://localhost:5000/*` (configured in `next.config.js`).
 
 ---
 
-## Estrutura de Pastas
+## Folder Structure
 
 ```
 upload-s3-aws/
-├── backend/                          # API NestJS
+├── backend/                          # NestJS API
 │   ├── src/
-│   │   ├── main.ts                   # Ponto de entrada
-│   │   ├── app.module.ts             # Módulo raiz (ConfigModule, UploadModule)
-│   │   └── upload/                   # Módulo de upload (controllers, services, decorators, interfaces)
-│   ├── test/                         # Configuração de testes E2E
-│   ├── dist/                         # Build de produção (gerado)
-│   ├── .env.example                  # Template de variáveis de ambiente
+│   │   ├── main.ts                   # Entry point
+│   │   ├── app.module.ts             # Root module (ConfigModule, UploadModule)
+│   │   └── upload/                   # Upload module (controllers, services, decorators, interfaces)
+│   ├── test/                         # E2E test configuration
+│   ├── dist/                         # Production build (generated)
+│   ├── .env.example                  # Environment variable template
 │   └── nest-cli.json
-├── frontend/                         # Interface Next.js
+├── frontend/                         # Next.js interface
 │   ├── src/
-│   │   ├── app/                      # App Router (layout, páginas, estilos globais)
-│   │   ├── components/               # Componentes reutilizáveis (FileUploader, ImageGallery)
-│   │   └── lib/                      # Utilitários (api.ts, types.ts)
-│   ├── next.config.js                # Proxy /api/* para o backend
+│   │   ├── app/                      # App Router (layout, pages, global styles)
+│   │   ├── components/               # Reusable components (FileUploader, ImageGallery)
+│   │   └── lib/                      # Utilities (api.ts, types.ts)
+│   ├── next.config.js                # /api/* proxy to backend
 │   └── tailwind.config.js
 └── .gitignore
 ```
@@ -120,15 +120,15 @@ upload-s3-aws/
 
 ## API
 
-| Método | Rota | Descrição |
+| Method | Route | Description |
 |--------|------|-----------|
-| `POST` | `/upload/single` | Upload de arquivo único (campo: `file`) |
-| `POST` | `/upload/multiple` | Upload de múltiplos arquivos (campo: `files`, máx. 10) |
-| `GET` | `/upload/signed-url/:key?expiresIn=3600` | URL assinada para download |
-| `DELETE` | `/upload/:key` | Excluir arquivo |
-| `PUT` | `/upload/:key` | Substituir arquivo |
+| `POST` | `/upload/single` | Upload single file (field: `file`) |
+| `POST` | `/upload/multiple` | Upload multiple files (field: `files`, max 10) |
+| `GET` | `/upload/signed-url/:key?expiresIn=3600` | Signed URL for download |
+| `DELETE` | `/upload/:key` | Delete file |
+| `PUT` | `/upload/:key` | Replace file |
 
-**Restrições:** arquivos JPEG, PNG, GIF, PDF, TXT — tamanho máximo **10 MB**.
+**Restrictions:** JPEG, PNG, GIF, PDF, TXT files — max size **10 MB**.
 
 ---
 
@@ -136,45 +136,45 @@ upload-s3-aws/
 
 ### Backend
 
-| Comando | Descrição |
+| Command | Description |
 |---------|-----------|
-| `npm run dev` | Desenvolvimento com *hot-reload* |
-| `npm run build` | Compilar para `dist/` |
-| `npm run start:prod` | Produção (`node dist/main`) |
-| `npm run test` | Testes unitários (Jest) |
+| `npm run dev` | Development with hot-reload |
+| `npm run build` | Compile to `dist/` |
+| `npm run start:prod` | Production (`node dist/main`) |
+| `npm run test` | Unit tests (Jest) |
 | `npm run lint` | ESLint + Prettier |
 
 ### Frontend
 
-| Comando | Descrição |
+| Command | Description |
 |---------|-----------|
-| `npm run dev` | Desenvolvimento (porta 3001) |
-| `npm run build` | Build de produção |
-| `npm run start` | Servir build de produção |
+| `npm run dev` | Development (port 3001) |
+| `npm run build` | Production build |
+| `npm run start` | Serve production build |
 | `npm run lint` | ESLint |
 
 ---
 
 ## Deploy
 
-1. Configure as variáveis de ambiente no ambiente-alvo.
-2. Execute `npm run build` em cada pacote.
-3. Inicie o backend com `npm run start:prod` (ou containerize).
-4. Faça deploy do frontend na Vercel, Netlify ou servidor próprio — aponte `NEXT_PUBLIC_API_URL` para a URL de produção do backend.
-5. Configure o **CORS** do bucket S3 para permitir a origem do frontend.
+1. Set environment variables in the target environment.
+2. Run `npm run build` in each package.
+3. Start the backend with `npm run start:prod` (or containerize).
+4. Deploy the frontend to Vercel, Netlify, or your own server — point `NEXT_PUBLIC_API_URL` to the backend production URL.
+5. Configure S3 bucket **CORS** to allow the frontend origin.
 
 ---
 
-## Contribuição
+## Contributing
 
-1. Faça um *fork* do repositório.
-2. Crie uma *branch* descritiva: `git checkout -b feat/minha-feature`.
-3. Commit usando [Conventional Commits](https://www.conventionalcommits.org): `git commit -m "feat: adiciona ..."`.
-4. Execute `npm run lint` para garantir conformidade com o estilo.
-5. Abra um *Pull Request* para a branch `main`.
+1. Fork the repository.
+2. Create a descriptive branch: `git checkout -b feat/my-feature`.
+3. Commit using [Conventional Commits](https://www.conventionalcommits.org): `git commit -m "feat: add ..."`.
+4. Run `npm run lint` to ensure style compliance.
+5. Open a Pull Request to the `main` branch.
 
 ---
 
-## Licença
+## License
 
 MIT
